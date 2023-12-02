@@ -4,6 +4,8 @@ import 'layout_connected.dart';
 import 'layout_connecting.dart';
 import 'layout_disconnected.dart';
 import 'layout_disconnecting.dart';
+import 'layout_playing.dart';
+
 import 'app_data.dart';
 
 // Main application widget
@@ -28,6 +30,8 @@ class AppState extends State<App> {
         return const LayoutConnecting();
       case ConnectionStatus.connected:
         return const LayoutConnected();
+      case ConnectionStatus.playing:
+        return const LayoutPlaying();
       default:
         return const LayoutDisconnected();
     }

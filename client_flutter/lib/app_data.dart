@@ -13,11 +13,13 @@ enum ConnectionStatus {
   disconnecting,
   connecting,
   connected,
+  playing,
 }
 
 class AppData with ChangeNotifier {
   String ip = "localhost";
   String port = "8888";
+  String name = "";
 
   IOWebSocketChannel? _socketClient;
   ConnectionStatus connectionStatus = ConnectionStatus.disconnected;
@@ -68,6 +70,10 @@ class AppData with ChangeNotifier {
         }
 
         switch (data['type']) {
+          //MENSAJES RECIBIDOS
+          case 'deck':
+            prueba();
+            break;
           case 'list':
             clients = (data['list'] as List).map((e) => e.toString()).toList();
             clients.remove(mySocketId);
@@ -98,7 +104,6 @@ class AppData with ChangeNotifier {
             messages += "Message from '${data['from']}': ${data['value']}\n";
             break;
         }
-
         notifyListeners();
       },
       onError: (error) {
@@ -118,6 +123,12 @@ class AppData with ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  prueba() {
+    connectionStatus = ConnectionStatus.playing;
+    print("prueba() called. ConnectionStatus: $connectionStatus");
+    notifyListeners();
   }
 
   disconnectFromServer() async {
@@ -174,20 +185,6 @@ class AppData with ChangeNotifier {
     _socketClient!.sink.add(jsonEncode(message));
   }
 
-  /*
-  * Save file example:
-
-    final myData = {
-      'type': 'list',
-      'clients': clients,
-      'selectedClient': selectedClient,
-      // i més camps que vulguis guardar
-    };
-    
-    await saveFile('myData.json', myData);
-
-  */
-
   Future<void> saveFile(String fileName, Map<String, dynamic> data) async {
     file_saving = true;
     notifyListeners();
@@ -205,13 +202,6 @@ class AppData with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  /*
-  * Read file example:
-  
-    final data = await readFile('myData.json');
-
-  */
 
   Future<Map<String, dynamic>?> readFile(String fileName) async {
     file_loading = true;
@@ -237,5 +227,9 @@ class AppData with ChangeNotifier {
       file_loading = false;
       notifyListeners();
     }
+  }
+
+  sendServer(String message) {
+    _socketClient!.sink.add(message);
   }
 }

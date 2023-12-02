@@ -12,6 +12,7 @@ class LayoutDisconnected extends StatefulWidget {
 class _LayoutDisconnectedState extends State<LayoutDisconnected> {
   final _ipController = TextEditingController();
   final _portController = TextEditingController();
+  final _nameController = TextEditingController();
 
   Widget _buildTextFormField(
     String label,
@@ -38,7 +39,8 @@ class _LayoutDisconnectedState extends State<LayoutDisconnected> {
   @override
   Widget build(BuildContext context) {
     AppData appData = Provider.of<AppData>(context);
-
+    appData.name = _nameController.text;
+    // name
     _ipController.text = appData.ip;
 
     return CupertinoPageScaffold(
@@ -53,6 +55,8 @@ class _LayoutDisconnectedState extends State<LayoutDisconnected> {
           const SizedBox(height: 20),
           _buildTextFormField("Server port", appData.port, _portController),
           const SizedBox(height: 20),
+          _buildTextFormField("Name", appData.name, _nameController),
+          const SizedBox(height: 20),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             SizedBox(
               width: 96,
@@ -61,6 +65,7 @@ class _LayoutDisconnectedState extends State<LayoutDisconnected> {
                 onPressed: () {
                   appData.ip = _ipController.text;
                   appData.port = _portController.text;
+                  appData.name = _nameController.text;
                   appData.connectToServer();
                 },
                 padding: EdgeInsets.zero,

@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 public class ChatServer extends WebSocketServer {
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    String jsonString = "{ \"type\": \"deck\", \"value\": [ {\"type\": \"card\", \"fruit\": \"naranja\", \"image\": \"naranja.jpg\", \"id\": 1}, {\"type\": \"card\", \"fruit\": \"naranja\", \"image\": \"naranja.jpg\", \"id\": 2}, {\"type\": \"card\", \"fruit\": \"uva\", \"image\": \"uva.jpg\", \"id\": 3}, {\"type\": \"card\", \"fruit\": \"uva\", \"image\": \"uva.jpg\", \"id\": 4}, {\"type\": \"card\", \"fruit\": \"manzana\", \"image\": \"manzana.jpg\", \"id\": 5}, {\"type\": \"card\", \"fruit\": \"manzana\", \"image\": \"manzana.jpg\", \"id\": 6}, {\"type\": \"card\", \"fruit\": \"pera\",\"image\": \"pera.jpg\", \"id\": 7}, {\"type\": \"card\", \"fruit\": \"pera\",\"image\": \"pera.jpg\", \"id\": 8}, {\"type\": \"card\", \"fruit\": \"sandia\",\"image\": \"sandia.jpg\", \"id\": 9}, {\"type\": \"card\", \"fruit\": \"sandia\",\"image\": \"sandia.jpg\", \"id\": 10}, {\"type\": \"card\", \"fruit\": \"platano\", \"image\": \"platano.jpg\", \"id\": 11}, {\"type\": \"card\", \"fruit\": \"platano\", \"image\": \"platano.jpg\", \"id\": 12}, {\"type\": \"card\", \"fruit\": \"fresa\",\"image\": \"fresa.jpg\", \"id\": 13}, {\"type\": \"card\", \"fruit\": \"fresa\",\"image\": \"fresa.jpg\", \"id\": 14}, {\"type\": \"card\", \"fruit\": \"kiwi\",\"image\": \"kiwi.jpg\", \"id\": 15}, {\"type\": \"card\", \"fruit\": \"kiwi\",\"image\": \"kiwi.jpg\", \"id\": 16} ] }";
+    String jsonString = "{ \"type\": [ {\"type\": \"card\", \"fruit\": \"naranja\", \"image\": \"naranja.jpg\", \"id\": 1}, {\"type\": \"card\", \"fruit\": \"naranja\", \"image\": \"naranja.jpg\", \"id\": 2}, {\"type\": \"card\", \"fruit\": \"uva\", \"image\": \"uva.jpg\", \"id\": 3}, {\"type\": \"card\", \"fruit\": \"uva\", \"image\": \"uva.jpg\", \"id\": 4}, {\"type\": \"card\", \"fruit\": \"manzana\", \"image\": \"manzana.jpg\", \"id\": 5}, {\"type\": \"card\", \"fruit\": \"manzana\", \"image\": \"manzana.jpg\", \"id\": 6}, {\"type\": \"card\", \"fruit\": \"pera\",\"image\": \"pera.jpg\", \"id\": 7}, {\"type\": \"card\", \"fruit\": \"pera\",\"image\": \"pera.jpg\", \"id\": 8}, {\"type\": \"card\", \"fruit\": \"sandia\",\"image\": \"sandia.jpg\", \"id\": 9}, {\"type\": \"card\", \"fruit\": \"sandia\",\"image\": \"sandia.jpg\", \"id\": 10}, {\"type\": \"card\", \"fruit\": \"platano\", \"image\": \"platano.jpg\", \"id\": 11}, {\"type\": \"card\", \"fruit\": \"platano\", \"image\": \"platano.jpg\", \"id\": 12}, {\"type\": \"card\", \"fruit\": \"fresa\",\"image\": \"fresa.jpg\", \"id\": 13}, {\"type\": \"card\", \"fruit\": \"fresa\",\"image\": \"fresa.jpg\", \"id\": 14}, {\"type\": \"card\", \"fruit\": \"kiwi\",\"image\": \"kiwi.jpg\", \"id\": 15}, {\"type\": \"card\", \"fruit\": \"kiwi\",\"image\": \"kiwi.jpg\", \"id\": 16} ] }";
     //String jsonString = "{ \"type\": [ {\"type\": \"card\", \"fruit\": \"naranja\", \"image\": \"naranja.jpg\", \"id\": \"card00\"}, {\"type\": \"card\", \"fruit\": \"naranja\", \"image\": \"naranja.jpg\", \"id\": \"card01\"}, {\"type\": \"card\", \"fruit\": \"uva\", \"image\": \"uva.jpg\", \"id\": \"card02\"}, {\"type\": \"card\", \"fruit\": \"uva\", \"image\": \"uva.jpg\", \"id\": 4}, {\"type\": \"card\", \"fruit\": \"manzana\", \"image\": \"manzana.jpg\", \"id\": 5}, {\"type\": \"card\", \"fruit\": \"manzana\", \"image\": \"manzana.jpg\", \"id\": 6}, {\"type\": \"card\", \"fruit\": \"pera\",\"image\": \"pera.jpg\", \"id\": 7}, {\"type\": \"card\", \"fruit\": \"pera\",\"image\": \"pera.jpg\", \"id\": 8}, {\"type\": \"card\", \"fruit\": \"sandia\",\"image\": \"sandia.jpg\", \"id\": 9}, {\"type\": \"card\", \"fruit\": \"sandia\",\"image\": \"sandia.jpg\", \"id\": 10}, {\"type\": \"card\", \"fruit\": \"platano\", \"image\": \"platano.jpg\", \"id\": 11}, {\"type\": \"card\", \"fruit\": \"platano\", \"image\": \"platano.jpg\", \"id\": 12}, {\"type\": \"card\", \"fruit\": \"fresa\",\"image\": \"fresa.jpg\", \"id\": 13}, {\"type\": \"card\", \"fruit\": \"fresa\",\"image\": \"fresa.jpg\", \"id\": 14}, {\"type\": \"card\", \"fruit\": \"kiwi\",\"image\": \"kiwi.jpg\", \"id\": 15}, {\"type\": \"card\", \"fruit\": \"kiwi\",\"image\": \"kiwi.jpg\", \"id\": 16} ] }";
     ArrayList<ArrayList<String>> users = new ArrayList(); // conn, point, name ,inicio
     ArrayList<ArrayList<String>> selectedCards = new ArrayList<>();
@@ -97,7 +97,7 @@ public class ChatServer extends WebSocketServer {
             System.out.println("Se comenzooo");
             Collections.shuffle(users);
             randomDeck();
-            //sendDeck();
+            sendDeck();
             sendTurn();
         }
     }
@@ -387,33 +387,30 @@ public class ChatServer extends WebSocketServer {
         try {
             // Parse JSON string
             JSONObject jsonObject = new JSONObject(jsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray("value");
-    
+            JSONArray jsonArray = jsonObject.getJSONArray("type");
+
             // Convert JSONArray to List
-            List<Object> cardList = new ArrayList<>();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                cardList.add(jsonArray.get(i));
-            }
-    
+            List<Object> cardList = jsonArray.toList();
+
             // Shuffle the list
             Collections.shuffle(cardList);
-    
+
             // Create a new JSONArray and add the shuffled elements
-            JSONArray shuffledJsonArray = new JSONArray(cardList);
-    
+            JSONArray shuffledJsonArray = new JSONArray();
+            for (Object card : cardList) {
+                shuffledJsonArray.put(card);
+            }
+
             // Update the original JSONObject with the shuffled JSONArray
             jsonObject.put("type", "deck");
             jsonObject.put("value", shuffledJsonArray);
-    
+
             // Convert back to JSON string
             String randomizedJsonString = jsonObject.toString();
-    
+
             // Print the randomized JSON string
             System.out.println(randomizedJsonString);
-    
-            // Enviar el mazo a los clientes
-            sendDeck(randomizedJsonString);
-    
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -424,10 +421,16 @@ public class ChatServer extends WebSocketServer {
         objResponse = new JSONObject("{}");
         objResponse.put("type", "game");
         objResponse.put("turn", users.get(0).get(0));
-        broadcast(objResponse.toString()); 
+        broadcast(objResponse.toString());
     }
 
-    public void sendDeck(String shuffledDeck) {
-        broadcast(shuffledDeck);
+    public void sendDeck() {
+        JSONObject objResponse = new JSONObject("{}");
+        objResponse.put("type", "deck");
+        objResponse.put("value", jsonString);
+        System.out.println("AQUOI");
+        System.out.println(objResponse.toString());
+        System.out.println("AQUOI");
+        broadcast(objResponse.toString());
     }
 }
